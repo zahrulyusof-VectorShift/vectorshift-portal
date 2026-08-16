@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Technical AI Interview Portal | VectorShift Lab</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <!-- VAPI WEB SDK CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/@vapi-ai/web@latest/dist/env/vapi.js"></script>
     <style>
         html, body {
             min-height: 100vh;
@@ -17,8 +19,6 @@
             overflow-x: hidden;
         }
         .hidden-ui { display: none !important; }
-        
-        /* High-End Enterprise Glow & Texture */
         .bg-tech-pattern {
             background-color: #030712;
             background-image: 
@@ -28,7 +28,6 @@
                 linear-gradient(to bottom, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
             background-size: 100% 100%, 100% 100%, 40px 40px, 40px 40px;
         }
-
         .glass-panel {
             background: rgba(15, 23, 42, 0.75);
             border: 1px solid rgba(51, 65, 85, 0.6);
@@ -74,7 +73,7 @@
 
             <p class="text-[11px] text-slate-400 mb-6 text-center leading-relaxed">
                 <span class="text-blue-400">●</span> Camera & Mic required &nbsp;|&nbsp; 
-                <span class="text-blue-400">●</span> 90s per response window &nbsp;|&nbsp; 
+                <span class="text-blue-400">●</span> 90s response windows &nbsp;|&nbsp; 
                 <span class="text-blue-400">●</span> Anti-cheat active
             </p>
 
@@ -91,7 +90,6 @@
     <!-- STAGE 2: MAIN INTERVIEW DASHBOARD -->
     <div id="interview-dashboard" class="hidden-ui w-full max-w-7xl mx-auto flex-1 flex flex-col justify-between">
         
-        <!-- HEADER BAR -->
         <header class="flex justify-between items-center pb-4 border-b border-slate-800/80 mb-6">
             <div class="flex items-center gap-3">
                 <div class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-ping"></div>
@@ -109,35 +107,28 @@
             </div>
         </header>
 
-        <!-- MAIN DASHBOARD CONTENT -->
         <div class="flex-1 grid grid-cols-1 lg:grid-cols-3 gap-6 items-stretch">
             
-            <!-- LEFT COLUMN: AI VOICE & 90s TIMER (Spans 2 cols) -->
             <div class="lg:col-span-2 glass-panel rounded-2xl flex flex-col items-center justify-between p-6 sm:p-8 relative min-h-[450px]">
                 <div class="w-full flex justify-between items-center text-xs text-slate-400 uppercase tracking-widest font-semibold border-b border-slate-800 pb-3">
                     <span>AI Evaluator: Maya</span>
-                    <span class="text-blue-400">Status: Listening</span>
+                    <span id="maya-status-text" class="text-blue-400">Status: Initializing...</span>
                 </div>
                 
-                <!-- 90s Circular Timer with Glowing Aura -->
                 <div class="my-auto flex flex-col items-center justify-center">
-                    <div class="w-44 h-44 sm:w-52 sm:h-52 rounded-full border-4 border-blue-500/30 flex items-center justify-center relative shadow-2xl shadow-blue-500/20 bg-slate-900/50">
+                    <div id="timer-ring" class="w-44 h-44 sm:w-52 sm:h-52 rounded-full border-4 border-blue-500/30 flex items-center justify-center relative shadow-2xl shadow-blue-500/20 bg-slate-900/50">
                         <div id="timer-display" class="text-5xl font-extralight text-white tracking-tight">90s</div>
                         <span class="absolute -bottom-3 px-3 py-0.5 bg-blue-600 text-[10px] uppercase tracking-widest font-bold rounded-full text-white shadow">Answer Window</span>
                     </div>
                 </div>
 
-                <!-- Live Subtitles Box -->
                 <div class="w-full bg-slate-950/90 rounded-xl p-4 min-h-[100px] border border-slate-800/80">
                     <p class="text-xs uppercase tracking-wider text-slate-500 font-semibold mb-1">Live Audio Subtitles</p>
-                    <p id="live-transcript" class="text-slate-300 text-sm italic leading-relaxed">Maya's live voice transcript will stream here during the evaluation...</p>
+                    <p id="live-transcript" class="text-slate-300 text-sm italic leading-relaxed">Connecting to Maya AI Voice Screener...</p>
                 </div>
             </div>
 
-            <!-- RIGHT COLUMN: WEBCAM & PROCTORING (Spans 1 col) -->
             <div class="lg:col-span-1 flex flex-col gap-6">
-                
-                <!-- CANDIDATE STREAM -->
                 <div class="glass-panel rounded-2xl h-56 overflow-hidden relative flex flex-col">
                     <div class="absolute top-3 left-3 text-white/90 text-[10px] bg-slate-950/80 px-2.5 py-1 rounded-md z-10 border border-slate-700/60 font-medium">
                         Candidate Live Video Stream
@@ -145,7 +136,6 @@
                     <video id="webcam-live" autoplay muted playsinline class="w-full h-full object-cover"></video>
                 </div>
                 
-                <!-- ANTI-CHEAT MONITOR -->
                 <div class="glass-panel rounded-2xl flex-1 p-6 flex flex-col justify-between">
                     <div>
                         <h3 class="text-slate-400 uppercase tracking-widest text-xs font-semibold mb-4 border-b border-slate-800 pb-2">Security & Focus Monitor</h3>
@@ -172,7 +162,6 @@
             </div>
         </div>
 
-        <!-- FOOTER BAR -->
         <footer class="mt-6 pt-3 border-t border-slate-800/60 flex justify-between items-center text-[11px] text-slate-500">
             <span>Session ID: #VSL-9821</span>
             <span>VectorShift Lab Multi-Tenant Screener v2.4</span>
@@ -180,6 +169,15 @@
     </div>
 
     <script>
+        // CONFIGURATION: PASTE YOUR VAPI KEYS HERE (Lines 150 & 151)
+        const VAPI_PUBLIC_KEY = "2fc52977-ec09-4b46-9ee8-deb2fabb92fd";
+        const VAPI_ASSISTANT_ID = "9291bb86-e2a4-436e-a792-add4762ab8dd";
+
+        let vapiInstance = null;
+        let timerInterval = null;
+        let secondsRemaining = 90;
+        let tabWarnings = 0;
+
         const urlParams = new URLSearchParams(window.location.search);
         const roleParam = urlParams.get('role') || 'Plastic Packaging / Mold Process Engineer';
         const companyParam = urlParams.get('company') || 'VectorShift Enterprise Client';
@@ -196,12 +194,9 @@
         async function setupCamera() {
             try {
                 const stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
-                
-                const preview = document.getElementById('webcam-preview');
-                preview.srcObject = stream;
-                preview.classList.remove('hidden-ui');
+                document.getElementById('webcam-preview').srcObject = stream;
+                document.getElementById('webcam-preview').classList.remove('hidden-ui');
                 document.getElementById('camera-status-container').classList.add('hidden-ui');
-                
                 document.getElementById('webcam-live').srcObject = stream;
 
                 const btn = document.getElementById('start-btn');
@@ -214,15 +209,69 @@
             }
         }
 
-        function handleConfirmation(e) {
+        function start90sTimer() {
+            clearInterval(timerInterval);
+            secondsRemaining = 90;
+            document.getElementById('timer-display').innerText = "90s";
+            
+            timerInterval = setInterval(() => {
+                secondsRemaining--;
+                document.getElementById('timer-display').innerText = `${secondsRemaining}s`;
+                if(secondsRemaining <= 0) {
+                    secondsRemaining = 90;
+                }
+            }, 1000);
+        }
+
+        document.addEventListener('visibilitychange', () => {
+            if (document.hidden && !document.getElementById('interview-dashboard').classList.contains('hidden-ui')) {
+                tabWarnings++;
+                document.getElementById('warning-count').innerText = `${tabWarnings} / 3`;
+                const statusEl = document.getElementById('tab-status');
+                statusEl.innerText = "FLAGGED (Tab Switched)";
+                statusEl.className = "px-2 py-0.5 bg-rose-500/20 text-rose-400 border border-rose-500/40 rounded font-medium animate-pulse";
+            }
+        });
+
+        async function handleConfirmation(e) {
             e.preventDefault();
             const confirmedName = document.getElementById('confirm-name').value;
             const confirmedEmail = document.getElementById('confirm-email').value;
 
             document.getElementById('dashboard-candidate-info').innerText = `${confirmedName} (${confirmedEmail})`;
-
             document.getElementById('confirmation-modal').classList.add('hidden-ui');
             document.getElementById('interview-dashboard').classList.remove('hidden-ui');
+
+            try {
+                vapiInstance = new Vapi(VAPI_PUBLIC_KEY);
+                vapiInstance.start(VAPI_ASSISTANT_ID);
+
+                vapiInstance.on('call-start', () => {
+                    document.getElementById('maya-status-text').innerText = "Status: Connected & Listening";
+                    document.getElementById('live-transcript').innerText = "Maya: Greeting candidate...";
+                    start90sTimer();
+                });
+
+                vapiInstance.on('message', (message) => {
+                    if (message.type === 'transcript') {
+                        const role = message.role === 'assistant' ? 'Maya' : confirmedName;
+                        document.getElementById('live-transcript').innerText = `${role}: "${message.transcript}"`;
+                    }
+                });
+
+                vapiInstance.on('call-end', () => {
+                    document.getElementById('maya-status-text').innerText = "Status: Session Completed";
+                    document.getElementById('live-transcript').innerText = "Evaluation finished. Thank you!";
+                    clearInterval(timerInterval);
+                });
+
+                vapiInstance.on('error', (err) => {
+                    console.error("Vapi Error:", err);
+                    document.getElementById('live-transcript').innerText = "Connecting live audio stream...";
+                });
+            } catch (err) {
+                console.error("Vapi launch error:", err);
+            }
         }
 
         window.addEventListener('load', setupCamera);
