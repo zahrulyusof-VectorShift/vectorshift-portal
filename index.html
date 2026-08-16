@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en" class="h-full bg-slate-950">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Technical AI Interview Portal | VectorShift Lab</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        html, body {
+            min-height: 100vh;
+            width: 100vw;
+            background-color: #030712 !important;
+            color: #f8fafc;
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            margin: 0;
+            padding: 0;
+            overflow-x: hidden;
+        }
+        .hidden-ui { display: none !important; }
+        
+        /* High-End Enterprise Glow & Texture */
+        .bg-tech-pattern {
+            background-color: #030712;
+            background-image: 
+                radial-gradient(circle at 50% 0%, rgba(37, 99, 235, 0.18) 0%, transparent 65%),
+                radial-gradient(circle at 80% 80%, rgba(99, 102, 241, 0.08) 0%, transparent 50%),
+                linear-gradient(to right, rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+                linear-gradient(to bottom, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+            background-size: 100% 100%, 100% 100%, 40px 40px, 40px 40px;
+        }
+
+        .glass-panel {
+            background: rgba(15, 23, 42, 0.75);
+            border: 1px solid rgba(51, 65, 85, 0.6);
+            backdrop-filter: blur(16px);
+            box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.7);
+        }
+    </style>
+</head>
+<body class="bg-tech-pattern min-h-screen flex flex-col justify-between p-4 sm:p-8">
+
+    <!-- STAGE 1: CONFIRMATION & PRE-FLIGHT SYSTEM CHECK -->
+    <div id="confirmation-modal" class="fixed inset-0 z-50 flex flex-col items-center justify-center p-4 bg-slate-950/90 backdrop-blur-md">
+        <div class="glass-panel p-8 rounded-2xl max-w-lg w-full relative border border-slate-700/60 shadow-2xl">
+            
+            <div class="text-center mb-6">
+                <div class="mb-3 flex justify-center">
+                    <span id="company-badge" class="px-3.5 py-1 bg-blue-500/10 text-blue-400 border border-blue-500/30 rounded-full text-xs font-semibold tracking-wider uppercase">
+                        VectorShift Enterprise Client
+                    </span>
+                </div>
+                <h1 id="position-title-display" class="text-2xl font-bold text-white tracking-tight">Plastic Packaging / Mold Process Engineer</h1>
+                <p class="text-xs text-slate-400 mt-1">Autonomous Technical AI Evaluation Portal</p>
+            </div>
+
+            <form id="candidate-form" onsubmit="handleConfirmation(event)" class="space-y-4 mb-6">
+                <div>
+                    <label class="block text-xs uppercase tracking-wider text-slate-400 mb-1 font-semibold">Full Name</label>
+                    <input type="text" id="confirm-name" required placeholder="Enter your full name" class="w-full bg-slate-900/90 border border-slate-700 rounded-lg px-3.5 py-2.5 text-sm text-white focus:outline-none focus:border-blue-500 transition-all">
+                </div>
+                <div>
+                    <label class="block text-xs uppercase tracking-wider text-slate-400 mb-1 font-semibold">Email Address</label>
+                    <input type="email" id="confirm-email" required placeholder="Enter your email address" class="w-full bg-slate-900/90 border border-slate-700 rounded-lg px-3.5 py-2.5 text-sm text-white focus:outline-none focus:border-blue-500 transition-all">
+                </div>
+            </form>
+
+            <div class="bg-slate-900/90 w-full h-44 rounded-xl mb-4 flex items-center justify-center overflow-hidden border border-slate-800 relative shadow-inner">
+                <video id="webcam-preview" autoplay muted playsinline class="w-full h-full object-cover hidden-ui"></video>
+                <div id="camera-status-container" class="text-center p-4">
+                    <p id="camera-status" class="text-slate-400 text-xs">Waiting for camera permission...</p>
+                    <p class="text-[10px] text-slate-500 mt-1">Please click "Allow" when prompted by your browser.</p>
+                </div>
+            </div>
+
+            <p class="text-[11px] text-slate-400 mb-6 text-center leading-relaxed">
+                <span class="text-blue-400">●</span> Camera & Mic required &nbsp;|&nbsp; 
+                <span class="text-blue-400">●</span> 90s per response window &nbsp;|&nbsp; 
+                <span class="text-blue-400">●</span> Anti-cheat active
+            </p>
+
+            <button id="start-btn" onclick="document.getElementById('candidate-form').requestSubmit()" disabled class="w-full bg-blue-600 hover:bg-blue-500 text-white font-semibold py-3 px-4 rounded-lg transition-all opacity-50 cursor-not-allowed text-sm shadow-lg shadow-blue-600/30">
+                Checking System...
+            </button>
+
+            <div class="mt-6 text-center">
+                <span class="text-[10px] text-slate-500 uppercase tracking-widest">Powered by <strong class="text-slate-400 font-semibold">VectorShift Lab</strong></span>
+            </div>
+        </div>
+    </div>
+
+    <!-- STAGE 2: MAIN INTERVIEW DASHBOARD -->
+    <div id="interview-dashboard" class="hidden-ui w-full max-w-7xl mx-auto flex-1 flex flex-col justify-between">
+        
+        <!-- HEADER BAR -->
+        <header class="flex justify-between items-center pb-4 border-b border-slate-800/80 mb-6">
+            <div class="flex items-center gap-3">
+                <div class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-ping"></div>
+                <div>
+                    <h1 id="dashboard-position-title" class="text-lg sm:text-xl font-bold text-white tracking-wide">Plastic Packaging / Mold Process Engineer</h1>
+                    <p id="dashboard-candidate-info" class="text-xs text-slate-400">Candidate Evaluation Session</p>
+                </div>
+            </div>
+            <div class="flex items-center gap-4">
+                <div class="px-3 py-1 bg-red-500/10 text-red-400 border border-red-500/30 rounded-full text-xs font-medium flex items-center gap-2">
+                    <span class="w-2 h-2 rounded-full bg-red-500 animate-pulse"></span>
+                    Live Proctoring Active
+                </div>
+                <span class="text-[10px] text-slate-500 uppercase tracking-widest hidden sm:inline">Powered by <strong class="text-slate-400 font-semibold">VectorShift Lab</strong></span>
+            </div>
+        </header>
+
+        <!-- MAIN DASHBOARD CONTENT -->
+        <div class="flex-1 grid grid-cols-1 lg:grid-cols-3 gap-6 items-stretch">
+            
+            <!-- LEFT COLUMN: AI VOICE & 90s TIMER (Spans 2 cols) -->
+            <div class="lg:col-span-2 glass-panel rounded-2xl flex flex-col items-center justify-between p-6 sm:p-8 relative min-h-[450px]">
+                <div class="w-full flex justify-between items-center text-xs text-slate-400 uppercase tracking-widest font-semibold border-b border-slate-800 pb-3">
+                    <span>AI Evaluator: Maya</span>
+                    <span class="text-blue-400">Status: Listening</span>
+                </div>
+                
+                <!-- 90s Circular Timer with Glowing Aura -->
+                <div class="my-auto flex flex-col items-center justify-center">
+                    <div class="w-44 h-44 sm:w-52 sm:h-52 rounded-full border-4 border-blue-500/30 flex items-center justify-center relative shadow-2xl shadow-blue-500/20 bg-slate-900/50">
+                        <div id="timer-display" class="text-5xl font-extralight text-white tracking-tight">90s</div>
+                        <span class="absolute -bottom-3 px-3 py-0.5 bg-blue-600 text-[10px] uppercase tracking-widest font-bold rounded-full text-white shadow">Answer Window</span>
+                    </div>
+                </div>
+
+                <!-- Live Subtitles Box -->
+                <div class="w-full bg-slate-950/90 rounded-xl p-4 min-h-[100px] border border-slate-800/80">
+                    <p class="text-xs uppercase tracking-wider text-slate-500 font-semibold mb-1">Live Audio Subtitles</p>
+                    <p id="live-transcript" class="text-slate-300 text-sm italic leading-relaxed">Maya's live voice transcript will stream here during the evaluation...</p>
+                </div>
+            </div>
+
+            <!-- RIGHT COLUMN: WEBCAM & PROCTORING (Spans 1 col) -->
+            <div class="lg:col-span-1 flex flex-col gap-6">
+                
+                <!-- CANDIDATE STREAM -->
+                <div class="glass-panel rounded-2xl h-56 overflow-hidden relative flex flex-col">
+                    <div class="absolute top-3 left-3 text-white/90 text-[10px] bg-slate-950/80 px-2.5 py-1 rounded-md z-10 border border-slate-700/60 font-medium">
+                        Candidate Live Video Stream
+                    </div>
+                    <video id="webcam-live" autoplay muted playsinline class="w-full h-full object-cover"></video>
+                </div>
+                
+                <!-- ANTI-CHEAT MONITOR -->
+                <div class="glass-panel rounded-2xl flex-1 p-6 flex flex-col justify-between">
+                    <div>
+                        <h3 class="text-slate-400 uppercase tracking-widest text-xs font-semibold mb-4 border-b border-slate-800 pb-2">Security & Focus Monitor</h3>
+                        <div class="space-y-4 text-xs">
+                            <div class="flex justify-between items-center border-b border-slate-800/60 pb-2.5">
+                                <span class="text-slate-400">Tab Focus State</span>
+                                <span id="tab-status" class="px-2 py-0.5 bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 rounded font-medium">Active (Secure)</span>
+                            </div>
+                            <div class="flex justify-between items-center border-b border-slate-800/60 pb-2.5">
+                                <span class="text-slate-400">Tab Switch Flags</span>
+                                <span id="warning-count" class="text-slate-200 font-bold">0 / 3</span>
+                            </div>
+                            <div class="flex justify-between items-center border-b border-slate-800/60 pb-2.5">
+                                <span class="text-slate-400">Webcam Feed</span>
+                                <span class="text-emerald-400 font-medium">Enforced</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="pt-4 text-[10px] text-slate-500 text-center leading-normal border-t border-slate-800">
+                        Session telemetry is encrypted and logged for hiring team review.
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- FOOTER BAR -->
+        <footer class="mt-6 pt-3 border-t border-slate-800/60 flex justify-between items-center text-[11px] text-slate-500">
+            <span>Session ID: #VSL-9821</span>
+            <span>VectorShift Lab Multi-Tenant Screener v2.4</span>
+        </footer>
+    </div>
+
+    <script>
+        const urlParams = new URLSearchParams(window.location.search);
+        const roleParam = urlParams.get('role') || 'Plastic Packaging / Mold Process Engineer';
+        const companyParam = urlParams.get('company') || 'VectorShift Enterprise Client';
+        const nameParam = urlParams.get('candidate') || '';
+        const emailParam = urlParams.get('email') || '';
+
+        document.getElementById('position-title-display').innerText = roleParam;
+        document.getElementById('company-badge').innerText = companyParam;
+        document.getElementById('dashboard-position-title').innerText = `${companyParam} — ${roleParam}`;
+
+        if(nameParam) document.getElementById('confirm-name').value = nameParam;
+        if(emailParam) document.getElementById('confirm-email').value = emailParam;
+
+        async function setupCamera() {
+            try {
+                const stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
+                
+                const preview = document.getElementById('webcam-preview');
+                preview.srcObject = stream;
+                preview.classList.remove('hidden-ui');
+                document.getElementById('camera-status-container').classList.add('hidden-ui');
+                
+                document.getElementById('webcam-live').srcObject = stream;
+
+                const btn = document.getElementById('start-btn');
+                btn.innerHTML = "Confirm & Start AI Interview";
+                btn.classList.remove('opacity-50', 'cursor-not-allowed');
+                btn.disabled = false;
+            } catch (err) {
+                document.getElementById('camera-status').innerHTML = "❌ Camera/Mic permission denied. Please allow access in browser settings.";
+                document.getElementById('camera-status').classList.add('text-rose-400');
+            }
+        }
+
+        function handleConfirmation(e) {
+            e.preventDefault();
+            const confirmedName = document.getElementById('confirm-name').value;
+            const confirmedEmail = document.getElementById('confirm-email').value;
+
+            document.getElementById('dashboard-candidate-info').innerText = `${confirmedName} (${confirmedEmail})`;
+
+            document.getElementById('confirmation-modal').classList.add('hidden-ui');
+            document.getElementById('interview-dashboard').classList.remove('hidden-ui');
+        }
+
+        window.addEventListener('load', setupCamera);
+    </script>
+</body>
+</html>
