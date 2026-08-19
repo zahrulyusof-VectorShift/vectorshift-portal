@@ -56,7 +56,7 @@
     <!-- HEADER BRANDING -->
     <header class="max-w-4xl mx-auto w-full flex items-center justify-between py-4 border-b border-slate-800/80 z-10">
         <div class="flex items-center space-x-3">
-            <img src="VectorShift_Lab_logo.png" alt="VectorShift Lab Logo" class="h-10 sm:h-12 w-auto object-contain drop-shadow-[0_0_15px_rgba(37,99,235,0.4)]">
+            <img src="VectorShift_Lab_logo.png" alt="VectorShift Lab Logo" class="h-14 sm:h-16 w-auto object-contain drop-shadow-[0_0_20px_rgba(37,99,235,0.5)]">
         </div>
         <span class="text-xs font-mono text-slate-400 bg-slate-900/90 px-3.5 py-1.5 rounded-full border border-slate-800/80 shadow-inner">
             Autonomous Technical Evaluation v2.4
@@ -88,7 +88,7 @@
                     <input type="email" id="confirm-email" required placeholder="alex.tan@example.com" class="w-full px-4 py-2.5 rounded-lg bg-slate-900/80 border border-slate-700 text-slate-100 placeholder-slate-500 focus:outline-none focus:border-blue-500">
                 </div>
                 <button type="submit" class="w-full py-3.5 px-6 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 font-semibold text-white transition-all shadow-xl shadow-blue-600/30 text-sm tracking-wide">
-                    Begin 3-Minute Technical Screening
+                    Begin Technical Screening
                 </button>
             </form>
         </div>
@@ -156,7 +156,7 @@
         });
 
         function start180sTimer() {
-            let secondsLeft = 180;
+            let secondsLeft = 180; // 3 Minutes total maximum window
             const timerEl = document.getElementById('timer-display');
             if (timerInterval) clearInterval(timerInterval);
 
