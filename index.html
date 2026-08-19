@@ -20,16 +20,16 @@
         .bg-tech-pattern {
             background-color: #030712;
             background-image:
-                radial-gradient(circle at 50% 0%, rgba(37, 99, 235, 0.22) 0%, transparent 70%),
-                radial-gradient(circle at 80% 80%, rgba(99, 102, 241, 0.12) 0%, transparent 50%),
-                radial-gradient(circle at 10% 90%, rgba(14, 165, 233, 0.1) 0%, transparent 45%),
+                radial-gradient(circle at 50% 0%, rgba(37, 99, 235, 0.25) 0%, transparent 70%),
+                radial-gradient(circle at 80% 80%, rgba(99, 102, 241, 0.15) 0%, transparent 50%),
+                radial-gradient(circle at 10% 90%, rgba(14, 165, 233, 0.12) 0%, transparent 45%),
                 linear-gradient(to right, rgba(255, 255, 255, 0.04) 1px, transparent 1px),
                 linear-gradient(to bottom, rgba(255, 255, 255, 0.04) 1px, transparent 1px);
             background-size: 100% 100%, 100% 100%, 100% 100%, 32px 32px, 32px 32px;
         }
         .glass-panel {
-            background: rgba(15, 23, 42, 0.85);
-            border: 1px solid rgba(51, 65, 85, 0.7);
+            background: rgba(15, 23, 42, 0.88);
+            border: 1px solid rgba(51, 65, 85, 0.75);
             backdrop-filter: blur(20px);
             box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.85);
         }
@@ -51,16 +51,19 @@
 </head>
 <body class="bg-tech-pattern min-h-screen flex flex-col justify-between p-4 sm:p-8 relative">
 
-    <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-blue-600/10 rounded-full blur-3xl pointer-events-none animate-pulse-glow"></div>
+    <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[650px] h-[650px] bg-blue-600/15 rounded-full blur-3xl pointer-events-none animate-pulse-glow"></div>
 
     <!-- HEADER BRANDING -->
-    <header class="max-w-4xl mx-auto w-full flex items-center justify-between py-4 border-b border-slate-800/80 z-10">
-        <div class="flex items-center space-x-3">
-            <img src="VectorShift_Lab_logo.png" alt="VectorShift Lab Logo" class="h-14 sm:h-16 w-auto object-contain drop-shadow-[0_0_20px_rgba(37,99,235,0.5)]">
+    <header class="max-w-4xl mx-auto w-full flex items-center justify-between py-6 border-b border-slate-800/80 z-10">
+        <div class="flex items-center space-x-4">
+            <img src="VectorShift_Lab_logo.png" alt="VectorShift Lab Logo" class="h-20 sm:h-24 w-auto object-contain filter drop-shadow-[0_0_25px_rgba(37,99,235,0.65)]">
         </div>
-        <span class="text-xs font-mono text-slate-400 bg-slate-900/90 px-3.5 py-1.5 rounded-full border border-slate-800/80 shadow-inner">
-            Autonomous Technical Evaluation v2.4
-        </span>
+        <div class="flex flex-col items-end">
+            <span class="text-xs font-mono text-blue-400 bg-blue-950/80 px-4 py-1.5 rounded-full border border-blue-800/60 shadow-lg tracking-wide uppercase font-semibold">
+                Powered by VectorShift Lab
+            </span>
+            <p class="text-[10px] text-slate-500 mt-1 font-mono">Autonomous Technical Screening Engine v2.4</p>
+        </div>
     </header>
 
     <!-- STAGE 1: CONFIRMATION & PRE-FLIGHT CHECK -->
@@ -156,7 +159,7 @@
         });
 
         function start180sTimer() {
-            let secondsLeft = 180; // 3 Minutes total maximum window
+            let secondsLeft = 180;
             const timerEl = document.getElementById('timer-display');
             if (timerInterval) clearInterval(timerInterval);
 
