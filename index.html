@@ -20,39 +20,61 @@
         .bg-tech-pattern {
             background-color: #030712;
             background-image:
-                radial-gradient(circle at 50% 0%, rgba(37, 99, 235, 0.18) 0%, transparent 65%),
-                radial-gradient(circle at 80% 80%, rgba(99, 102, 241, 0.08) 0%, transparent 50%),
-                linear-gradient(to right, rgba(255, 255, 255, 0.03) 1px, transparent 1px),
-                linear-gradient(to bottom, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
-            background-size: 100% 100%, 100% 100%, 40px 40px, 40px 40px;
+                radial-gradient(circle at 50% 0%, rgba(37, 99, 235, 0.22) 0%, transparent 70%),
+                radial-gradient(circle at 80% 80%, rgba(99, 102, 241, 0.12) 0%, transparent 50%),
+                radial-gradient(circle at 10% 90%, rgba(14, 165, 233, 0.1) 0%, transparent 45%),
+                linear-gradient(to right, rgba(255, 255, 255, 0.04) 1px, transparent 1px),
+                linear-gradient(to bottom, rgba(255, 255, 255, 0.04) 1px, transparent 1px);
+            background-size: 100% 100%, 100% 100%, 100% 100%, 32px 32px, 32px 32px;
         }
         .glass-panel {
-            background: rgba(15, 23, 42, 0.75);
-            border: 1px solid rgba(51, 65, 85, 0.6);
-            backdrop-filter: blur(16px);
-            box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.7);
+            background: rgba(15, 23, 42, 0.82);
+            border: 1px solid rgba(51, 65, 85, 0.7);
+            backdrop-filter: blur(20px);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.85);
+        }
+        @keyframes pulse-glow {
+            0%, 100% { opacity: 0.4; transform: scale(1); }
+            50% { opacity: 0.8; transform: scale(1.05); }
+        }
+        .animate-pulse-glow { animation: pulse-glow 3s infinite ease-in-out; }
+        .wave-bar { animation: wave 1.2s infinite ease-in-out alternate; }
+        @keyframes wave {
+            0% { height: 8px; }
+            100% { height: 36px; }
         }
     </style>
-    <!-- Standalone Vapi Web Engine -->
-    <script type="module">
-        import Vapi from 'https://esm.sh/@vapi-ai/web';
-        window.Vapi = Vapi;
-    </script>
 </head>
-<body class="bg-tech-pattern min-h-screen flex flex-col justify-between p-4 sm:p-8">
+<body class="bg-tech-pattern min-h-screen flex flex-col justify-between p-4 sm:p-8 relative">
 
-    <!-- STAGE 1: CONFIRMATION & PRE-FLIGHT SYSTEM CHECK -->
+    <!-- Ambient Glowing Backdrop -->
+    <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-blue-600/10 rounded-full blur-3xl pointer-events-none animate-pulse-glow"></div>
+
+    <!-- HEADER BRANDING -->
+    <header class="max-w-4xl mx-auto w-full flex items-center justify-between py-4 border-b border-slate-800/80 z-10">
+        <div class="flex items-center space-x-3">
+            <div class="w-8 h-8 rounded-lg bg-blue-600 flex items-center justify-center font-bold text-white shadow-lg shadow-blue-500/40">VS</div>
+            <span class="text-sm font-bold tracking-wider text-slate-200">VECTORSHIFT <span class="text-blue-400 font-light">LAB</span></span>
+        </div>
+        <span class="text-xs font-mono text-slate-400 bg-slate-900 px-3 py-1 rounded-full border border-slate-800">Autonomous Technical Evaluation v2.4</span>
+    </header>
+
+    <!-- STAGE 1: CONFIRMATION & PRE-FLIGHT CHECK -->
     <div id="confirmation-modal" class="fixed inset-0 z-50 flex flex-col items-center justify-center p-4 bg-slate-950/90 backdrop-blur-md">
-        <div class="glass-panel p-8 rounded-2xl max-w-lg w-full relative border border-slate-700/60 shadow-2xl">
-            <div class="mb-6 text-center">
-                <span class="inline-block px-3 py-1 text-xs font-semibold tracking-wider text-blue-400 bg-blue-950/60 rounded-full border border-blue-800/50 mb-3">
-                    VECTORSHIFT LAB | VOICE SCREENER
+        <div class="glass-panel p-8 rounded-2xl max-w-lg w-full relative border border-slate-700/60 shadow-2xl space-y-6">
+            <div class="text-center">
+                <span id="role-badge" class="inline-block px-3 py-1 text-xs font-semibold tracking-wider text-blue-400 bg-blue-950/80 rounded-full border border-blue-800/60 mb-3">
+                    SEMICONDUCTOR TECHNICAL EVALUATION
                 </span>
-                <h1 class="text-2xl font-bold text-slate-100">Pre-Flight Candidate Check</h1>
-                <p class="text-sm text-slate-400 mt-1">Confirm your details before initializing Maya AI</p>
+                <h1 class="text-2xl font-bold text-slate-100">Pre-Flight Candidate Verification</h1>
+                <p class="text-sm text-slate-400 mt-1">Initialize Maya AI for your technical screening session</p>
             </div>
 
             <form onsubmit="handleConfirmation(event)" class="space-y-4">
+                <div>
+                    <label class="block text-xs font-medium text-slate-300 mb-1">Target Engineering Role</label>
+                    <input type="text" id="target-role" readonly class="w-full px-4 py-2.5 rounded-lg bg-slate-900 border border-slate-800 text-blue-400 font-semibold focus:outline-none">
+                </div>
                 <div>
                     <label class="block text-xs font-medium text-slate-300 mb-1">Full Name</label>
                     <input type="text" id="confirm-name" required placeholder="e.g. Alex Tan" class="w-full px-4 py-2.5 rounded-lg bg-slate-900/80 border border-slate-700 text-slate-100 placeholder-slate-500 focus:outline-none focus:border-blue-500">
@@ -61,36 +83,53 @@
                     <label class="block text-xs font-medium text-slate-300 mb-1">Email Address</label>
                     <input type="email" id="confirm-email" required placeholder="alex.tan@example.com" class="w-full px-4 py-2.5 rounded-lg bg-slate-900/80 border border-slate-700 text-slate-100 placeholder-slate-500 focus:outline-none focus:border-blue-500">
                 </div>
-                <button type="submit" class="w-full py-3 px-6 rounded-lg bg-blue-600 hover:bg-blue-500 font-semibold text-white transition-all shadow-lg shadow-blue-600/30">
-                    Start Your AI Interview
+                <button type="submit" class="w-full py-3.5 px-6 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 font-semibold text-white transition-all shadow-xl shadow-blue-600/30 text-sm tracking-wide">
+                    Begin 3-Minute Technical Screening
                 </button>
             </form>
         </div>
     </div>
 
     <!-- STAGE 2: INTERVIEW DASHBOARD -->
-    <div id="interview-dashboard" class="hidden-ui max-w-4xl mx-auto w-full flex-grow flex flex-col justify-center space-y-6 my-auto">
-        <div class="glass-panel p-6 rounded-2xl border border-slate-700/60 space-y-4">
+    <main id="interview-dashboard" class="hidden-ui max-w-4xl mx-auto w-full flex-grow flex flex-col justify-center space-y-6 my-auto z-10">
+        <div class="glass-panel p-6 sm:p-8 rounded-2xl border border-slate-700/60 space-y-6">
+            
             <div class="flex items-center justify-between border-b border-slate-800 pb-4">
                 <div>
-                    <h2 id="dashboard-candidate-info" class="text-lg font-bold text-blue-400">Candidate Session</h2>
-                    <p id="maya-status-text" class="text-xs text-slate-400 mt-0.5">Status: Initializing Voice Stream...</p>
+                    <h2 id="dashboard-candidate-info" class="text-xl font-bold text-blue-400">Candidate Session</h2>
+                    <p id="maya-status-text" class="text-xs text-slate-400 mt-1 flex items-center gap-2">
+                        <span class="w-2 h-2 rounded-full bg-emerald-500 animate-ping"></span>
+                        Status: Initializing Audio Engine...
+                    </p>
                 </div>
-                <div id="timer-display" class="px-3 py-1.5 rounded-lg bg-slate-900 border border-slate-800 text-sm font-mono text-emerald-400">
-                    90s Remaining
+                <div id="timer-display" class="px-4 py-2 rounded-xl bg-slate-900 border border-slate-800 text-base font-mono text-emerald-400 shadow-inner">
+                    180s Remaining
                 </div>
             </div>
 
-            <div class="p-4 rounded-xl bg-slate-900/90 border border-slate-800/80 min-h-[160px] flex flex-col justify-between">
+            <!-- AUDIO WAVEFORM VISUALIZER -->
+            <div class="flex items-center justify-center space-x-2 py-4 bg-slate-950/60 rounded-xl border border-slate-800/80 h-20">
+                <div class="wave-bar w-1.5 bg-blue-500 rounded-full" style="animation-delay: 0.1s"></div>
+                <div class="wave-bar w-1.5 bg-blue-400 rounded-full" style="animation-delay: 0.3s"></div>
+                <div class="wave-bar w-1.5 bg-indigo-500 rounded-full" style="animation-delay: 0.2s"></div>
+                <div class="wave-bar w-1.5 bg-cyan-400 rounded-full" style="animation-delay: 0.4s"></div>
+                <div class="wave-bar w-1.5 bg-blue-600 rounded-full" style="animation-delay: 0.15s"></div>
+            </div>
+
+            <div class="p-5 rounded-xl bg-slate-900/90 border border-slate-800/80 min-h-[160px] flex flex-col justify-between">
                 <div>
-                    <span class="text-xs font-semibold text-slate-500 uppercase tracking-wider block mb-2">Live Transcript Stream</span>
-                    <p id="live-transcript" class="text-sm text-slate-200 leading-relaxed italic">
-                        "Maya is preparing interview prompts..."
+                    <span class="text-xs font-semibold text-slate-400 uppercase tracking-wider block mb-2">Live Technical Transcript Stream</span>
+                    <p id="live-transcript" class="text-base text-slate-200 leading-relaxed italic">
+                        "Maya is preparing technical scenario prompts..."
                     </p>
                 </div>
             </div>
         </div>
-    </div>
+    </main>
+
+    <footer class="max-w-4xl mx-auto w-full text-center py-4 text-xs text-slate-500 z-10">
+        &copy; 2026 VectorShift Lab. All rights reserved. Powered by Autonomous Voice AI.
+    </footer>
 
     <!-- ENGINE & LOGIC -->
     <script>
@@ -100,8 +139,21 @@
         let vapiInstance = null;
         let timerInterval = null;
 
-        function start90sTimer() {
-            let secondsLeft = 90;
+        // Auto-extract URL Parameters (e.g. ?role=Die%20Attach%20Engineer&name=Alex)
+        const urlParams = new URLSearchParams(window.location.search);
+        const urlRole = urlParams.get('role') || 'Mold Process Engineer';
+        const urlName = urlParams.get('name') || '';
+        const urlEmail = urlParams.get('email') || '';
+
+        document.addEventListener('DOMContentLoaded', () => {
+            document.getElementById('target-role').value = urlRole;
+            document.getElementById('role-badge').innerText = `ROLE: ${urlRole.toUpperCase()}`;
+            if (urlName) document.getElementById('confirm-name').value = urlName;
+            if (urlEmail) document.getElementById('confirm-email').value = urlEmail;
+        });
+
+        function start180sTimer() {
+            let secondsLeft = 180; // 3 Minutes maximum
             const timerEl = document.getElementById('timer-display');
             if (timerInterval) clearInterval(timerInterval);
 
@@ -111,7 +163,7 @@
                 if (secondsLeft <= 0) {
                     clearInterval(timerInterval);
                     if (vapiInstance) vapiInstance.stop();
-                    if (timerEl) timerEl.innerText = "Session Complete";
+                    if (timerEl) timerEl.innerText = "Evaluation Complete";
                 }
             }, 1000);
         }
@@ -119,15 +171,11 @@
         async function handleConfirmation(e) {
             if (e) e.preventDefault();
 
-            const nameInput = document.getElementById('confirm-name');
-            const emailInput = document.getElementById('confirm-email');
-            
-            if (!nameInput.value || !emailInput.value) return;
+            const confirmedName = document.getElementById('confirm-name').value;
+            const confirmedEmail = document.getElementById('confirm-email').value;
+            const targetRole = document.getElementById('target-role').value;
 
-            const confirmedName = nameInput.value;
-            const confirmedEmail = emailInput.value;
-
-            document.getElementById('dashboard-candidate-info').innerText = `${confirmedName} (${confirmedEmail})`;
+            document.getElementById('dashboard-candidate-info').innerText = `${confirmedName} | ${targetRole}`;
             document.getElementById('confirmation-modal').classList.add('hidden-ui');
             document.getElementById('interview-dashboard').classList.remove('hidden-ui');
 
@@ -141,18 +189,20 @@
                     window.Vapi = VapiSDK;
                 }
 
-                if (!VapiSDK) {
-                    alert("Audio engine loading. Please wait 3 seconds and click Start again.");
-                    return;
-                }
-
                 vapiInstance = new VapiSDK(VAPI_PUBLIC_KEY);
-                vapiInstance.start(VAPI_ASSISTANT_ID);
+                
+                // Pass dynamic role variable directly to Vapi Assistant
+                vapiInstance.start(VAPI_ASSISTANT_ID, {
+                    variableValues: {
+                        target_role: targetRole,
+                        candidate_name: confirmedName
+                    }
+                });
 
                 vapiInstance.on('call-start', () => {
                     document.getElementById('maya-status-text').innerText = "Status: Connected & Listening";
                     document.getElementById('live-transcript').innerText = "Maya: Greeting candidate...";
-                    start90sTimer();
+                    start180sTimer();
                 });
 
                 vapiInstance.on('message', (message) => {
@@ -163,7 +213,7 @@
                 });
 
                 vapiInstance.on('call-end', () => {
-                    document.getElementById('maya-status-text').innerText = "Status: Session Ended";
+                    document.getElementById('maya-status-text').innerText = "Status: Session Completed";
                     if (timerInterval) clearInterval(timerInterval);
                 });
 
@@ -174,7 +224,7 @@
 
             } catch (err) {
                 console.error("Initialization error:", err);
-                alert("Could not start audio stream. Please verify microphone permissions.");
+                alert("Could not start audio stream. Please check microphone permissions.");
             }
         }
     </script>
