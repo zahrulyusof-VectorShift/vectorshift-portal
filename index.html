@@ -22,10 +22,9 @@
             background-image:
                 radial-gradient(circle at 50% 0%, rgba(37, 99, 235, 0.25) 0%, transparent 70%),
                 radial-gradient(circle at 80% 80%, rgba(99, 102, 241, 0.15) 0%, transparent 50%),
-                radial-gradient(circle at 10% 90%, rgba(14, 165, 233, 0.12) 0%, transparent 45%),
                 linear-gradient(to right, rgba(255, 255, 255, 0.04) 1px, transparent 1px),
                 linear-gradient(to bottom, rgba(255, 255, 255, 0.04) 1px, transparent 1px);
-            background-size: 100% 100%, 100% 100%, 100% 100%, 32px 32px, 32px 32px;
+            background-size: 100% 100%, 100% 100%, 32px 32px, 32px 32px;
         }
         .glass-panel {
             background: rgba(15, 23, 42, 0.88);
@@ -43,6 +42,10 @@
             0% { height: 8px; }
             100% { height: 36px; }
         }
+        /* SVG Circle Ring Transition */
+        #timer-ring-path {
+            transition: stroke-dashoffset 1s linear, stroke 0.3s ease;
+        }
     </style>
     <script type="module">
         import Vapi from 'https://esm.sh/@vapi-ai/web';
@@ -54,7 +57,7 @@
     <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[650px] h-[650px] bg-blue-600/15 rounded-full blur-3xl pointer-events-none animate-pulse-glow"></div>
 
     <!-- HEADER BRANDING -->
-    <header class="max-w-4xl mx-auto w-full flex items-center justify-between py-6 border-b border-slate-800/80 z-10 gap-4">
+    <header class="max-w-5xl mx-auto w-full flex items-center justify-between py-6 border-b border-slate-800/80 z-10 gap-4">
         <div class="flex items-center space-x-4">
             <img src="VectorShift_Lab_logo.png" alt="VectorShift Lab Logo" class="h-20 sm:h-24 w-auto object-contain filter drop-shadow-[0_0_25px_rgba(37,99,235,0.65)]">
         </div>
@@ -74,7 +77,7 @@
                     SEMICONDUCTOR TECHNICAL EVALUATION
                 </span>
                 <h1 class="text-2xl font-bold text-slate-100">Pre-Flight Candidate Verification</h1>
-                <p class="text-sm text-slate-400 mt-1">Initialize Maya AI for your technical screening session</p>
+                <p class="text-sm text-slate-400 mt-1">Camera and microphone access are required for AI proctoring</p>
             </div>
 
             <form onsubmit="handleConfirmation(event)" class="space-y-4">
@@ -91,17 +94,27 @@
                     <input type="email" id="confirm-email" required placeholder="alex.tan@example.com" class="w-full px-4 py-2.5 rounded-lg bg-slate-900/80 border border-slate-700 text-slate-100 placeholder-slate-500 focus:outline-none focus:border-blue-500">
                 </div>
                 <button type="submit" class="w-full py-3.5 px-6 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 font-semibold text-white transition-all shadow-xl shadow-blue-600/30 text-sm tracking-wide">
-                    Begin Technical Screening
+                    Enable Camera & Begin Screening
                 </button>
             </form>
         </div>
     </div>
 
     <!-- STAGE 2: INTERVIEW DASHBOARD -->
-    <main id="interview-dashboard" class="hidden-ui max-w-4xl mx-auto w-full flex-grow flex flex-col justify-center space-y-6 my-auto z-10">
+    <main id="interview-dashboard" class="hidden-ui max-w-5xl mx-auto w-full flex-grow flex flex-col justify-center space-y-6 my-auto z-10">
+        
+        <!-- PROCTORING ALERT BANNER -->
+        <div id="proctor-warning-banner" class="hidden p-3 rounded-xl bg-amber-950/80 border border-amber-500/50 text-amber-300 text-xs font-mono flex items-center justify-between">
+            <span class="flex items-center gap-2">
+                <span class="w-2 h-2 rounded-full bg-amber-400 animate-ping"></span>
+                PROCTOR NOTICE: Multiple Monitors / Tab Inactivity Detected. Session flags recorded.
+            </span>
+            <span class="text-[10px] uppercase font-bold text-amber-400">Monitored</span>
+        </div>
+
         <div class="glass-panel p-6 sm:p-8 rounded-2xl border border-slate-700/60 space-y-6">
             
-            <div class="flex items-center justify-between border-b border-slate-800 pb-4">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between border-b border-slate-800 pb-6 gap-4">
                 <div>
                     <h2 id="dashboard-candidate-info" class="text-xl font-bold text-blue-400">Candidate Session</h2>
                     <p id="maya-status-text" class="text-xs text-slate-400 mt-1 flex items-center gap-2">
@@ -109,21 +122,51 @@
                         Status: Initializing Audio Engine...
                     </p>
                 </div>
-                <div id="timer-display" class="px-4 py-2 rounded-xl bg-slate-900 border border-slate-800 text-base font-mono text-emerald-400 shadow-inner">
-                    180s Remaining
+
+                <!-- CIRCULAR RADIAL COUNTDOWN TIMER -->
+                <div class="flex items-center space-x-3 bg-slate-900/90 px-4 py-2 rounded-2xl border border-slate-800 shadow-inner">
+                    <div class="relative w-16 h-16 flex items-center justify-center">
+                        <svg class="w-16 h-16 transform -rotate-90" viewBox="0 0 36 36">
+                            <!-- Background Circle -->
+                            <path class="text-slate-800" stroke-width="3" stroke="currentColor" fill="none" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+                            <!-- Progress Ring -->
+                            <path id="timer-ring-path" class="text-blue-500" stroke-dasharray="100, 100" stroke-dashoffset="0" stroke-width="3" stroke-linecap="round" stroke="currentColor" fill="none" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+                        </svg>
+                        <span id="timer-text" class="absolute text-xs font-mono font-bold text-slate-100">180s</span>
+                    </div>
+                    <div class="text-left">
+                        <span class="text-[10px] font-mono uppercase text-slate-500 block">Time Limit</span>
+                        <span class="text-xs font-semibold text-emerald-400">Live Session</span>
+                    </div>
                 </div>
             </div>
 
-            <!-- AUDIO WAVEFORM VISUALIZER -->
-            <div class="flex items-center justify-center space-x-2 py-4 bg-slate-950/60 rounded-xl border border-slate-800/80 h-20">
-                <div class="wave-bar w-1.5 bg-blue-500 rounded-full" style="animation-delay: 0.1s"></div>
-                <div class="wave-bar w-1.5 bg-blue-400 rounded-full" style="animation-delay: 0.3s"></div>
-                <div class="wave-bar w-1.5 bg-indigo-500 rounded-full" style="animation-delay: 0.2s"></div>
-                <div class="wave-bar w-1.5 bg-cyan-400 rounded-full" style="animation-delay: 0.4s"></div>
-                <div class="wave-bar w-1.5 bg-blue-600 rounded-full" style="animation-delay: 0.15s"></div>
+            <!-- DASHBOARD MIDDLE GRID: CAMERA & WAVEFORM -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 items-center">
+                
+                <!-- LIVE CAMERA PROCTOR WIDGET -->
+                <div class="relative rounded-xl overflow-hidden bg-slate-950 border border-slate-800 aspect-video flex items-center justify-center shadow-lg">
+                    <video id="webcam-feed" autoplay playsinline muted class="w-full h-full object-cover"></video>
+                    <div class="absolute top-2 left-2 bg-slate-900/80 backdrop-blur-md px-2.5 py-1 rounded-md border border-slate-700/60 flex items-center gap-1.5">
+                        <span class="w-2 h-2 rounded-full bg-red-500 animate-pulse"></span>
+                        <span class="text-[10px] font-mono text-slate-300 uppercase font-semibold">Proctor Camera</span>
+                    </div>
+                </div>
+
+                <!-- AUDIO WAVEFORM VISUALIZER -->
+                <div class="md:col-span-2 flex flex-col justify-center items-center space-y-3 py-6 bg-slate-950/60 rounded-xl border border-slate-800/80 h-full min-h-[120px]">
+                    <span class="text-[10px] font-mono uppercase text-slate-500 tracking-wider">Voice Waveform Stream</span>
+                    <div class="flex items-center justify-center space-x-2">
+                        <div class="wave-bar w-1.5 bg-blue-500 rounded-full" style="animation-delay: 0.1s"></div>
+                        <div class="wave-bar w-1.5 bg-blue-400 rounded-full" style="animation-delay: 0.3s"></div>
+                        <div class="wave-bar w-1.5 bg-indigo-500 rounded-full" style="animation-delay: 0.2s"></div>
+                        <div class="wave-bar w-1.5 bg-cyan-400 rounded-full" style="animation-delay: 0.4s"></div>
+                        <div class="wave-bar w-1.5 bg-blue-600 rounded-full" style="animation-delay: 0.15s"></div>
+                    </div>
+                </div>
             </div>
 
-            <div class="p-5 rounded-xl bg-slate-900/90 border border-slate-800/80 min-h-[160px] flex flex-col justify-between">
+            <div class="p-5 rounded-xl bg-slate-900/90 border border-slate-800/80 min-h-[140px] flex flex-col justify-between">
                 <div>
                     <span class="text-xs font-semibold text-slate-400 uppercase tracking-wider block mb-2">Live Technical Transcript Stream</span>
                     <p id="live-transcript" class="text-base text-slate-200 leading-relaxed italic">
@@ -145,6 +188,7 @@
 
         let vapiInstance = null;
         let timerInterval = null;
+        const TOTAL_SECONDS = 180;
 
         const urlParams = new URLSearchParams(window.location.search);
         const urlRole = urlParams.get('role') || 'Mold Process Engineer';
@@ -156,20 +200,63 @@
             document.getElementById('role-badge').innerText = `ROLE: ${urlRole.toUpperCase()}`;
             if (urlName) document.getElementById('confirm-name').value = urlName;
             if (urlEmail) document.getElementById('confirm-email').value = urlEmail;
+            
+            detectMultiMonitor();
         });
 
+        // MULTI-MONITOR & TAB FOCUS DETECTION
+        function detectMultiMonitor() {
+            const isMultiScreen = window.screen.isExtended || (window.screen.width > 2560);
+            if (isMultiScreen) {
+                document.getElementById('proctor-warning-banner').classList.remove('hidden');
+            }
+
+            document.addEventListener('visibilitychange', () => {
+                if (document.hidden) {
+                    document.getElementById('proctor-warning-banner').classList.remove('hidden');
+                }
+            });
+        }
+
+        // WEBCAM INITIALIZATION
+        async function startWebcam() {
+            try {
+                const stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: false });
+                const videoEl = document.getElementById('webcam-feed');
+                videoEl.srcObject = stream;
+            } catch (err) {
+                console.warn("Webcam access declined or unavailable:", err);
+            }
+        }
+
+        // RADIAL TIMER CALCULATOR
+        function updateRadialTimer(secondsLeft) {
+            const textEl = document.getElementById('timer-text');
+            const ringEl = document.getElementById('timer-ring-path');
+            
+            textEl.innerText = `${secondsLeft}s`;
+            
+            const percentage = (secondsLeft / TOTAL_SECONDS) * 100;
+            ringEl.setAttribute('stroke-dasharray', `${percentage}, 100`);
+
+            if (secondsLeft <= 30) {
+                ringEl.classList.remove('text-blue-500');
+                ringEl.classList.add('text-red-500');
+            }
+        }
+
         function start180sTimer() {
-            let secondsLeft = 180;
-            const timerEl = document.getElementById('timer-display');
+            let secondsLeft = TOTAL_SECONDS;
             if (timerInterval) clearInterval(timerInterval);
 
             timerInterval = setInterval(() => {
                 secondsLeft--;
-                if (timerEl) timerEl.innerText = `${secondsLeft}s Remaining`;
+                updateRadialTimer(secondsLeft);
+
                 if (secondsLeft <= 0) {
                     clearInterval(timerInterval);
                     if (vapiInstance) vapiInstance.stop();
-                    if (timerEl) timerEl.innerText = "Evaluation Complete";
+                    document.getElementById('timer-text').innerText = "0s";
                 }
             }, 1000);
         }
@@ -184,6 +271,9 @@
             document.getElementById('dashboard-candidate-info').innerText = `${confirmedName} | ${targetRole}`;
             document.getElementById('confirmation-modal').classList.add('hidden-ui');
             document.getElementById('interview-dashboard').classList.remove('hidden-ui');
+
+            // Start Webcam Feed
+            await startWebcam();
 
             try {
                 document.getElementById('maya-status-text').innerText = "Status: Connecting to Maya AI...";
