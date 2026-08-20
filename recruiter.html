@@ -36,15 +36,17 @@
 <body class="bg-tech-pattern min-h-screen flex flex-col justify-between p-4 sm:p-8 relative">
 
     <!-- HEADER BRANDING -->
-    <header class="max-w-4xl mx-auto w-full flex items-center justify-between py-6 border-b border-slate-800/80 z-10 gap-4">
-        <div class="flex items-center space-x-4">
-            <img src="VectorShift_Lab_logo.png" alt="VectorShift Lab Logo" class="h-16 sm:h-20 w-auto object-contain filter drop-shadow-[0_0_25px_rgba(37,99,235,0.65)]">
-        </div>
-        <div class="flex flex-col items-end">
-            <span class="text-sm font-mono text-blue-300 bg-blue-950/90 px-4 py-1.5 rounded-full border border-blue-500/80 shadow-[0_0_15px_rgba(37,99,235,0.4)] tracking-wide uppercase font-bold">
+    <header class="max-w-5xl mx-auto w-full flex flex-col sm:flex-row items-center justify-between py-6 border-b border-slate-800/80 z-10 gap-4">
+        <div class="flex flex-wrap items-center gap-4 sm:gap-6">
+            <img src="VectorShift_Lab_logo.png" alt="VectorShift Lab Logo" class="h-24 sm:h-28 w-auto object-contain filter drop-shadow-[0_0_30px_rgba(37,99,235,0.75)]">
+            <span class="text-sm sm:text-base font-mono text-blue-300 bg-blue-950/90 px-4 py-2 rounded-full border border-blue-500/80 shadow-[0_0_15px_rgba(37,99,235,0.4)] tracking-wide uppercase font-bold">
                 Powered by VectorShift Lab
             </span>
-            <p class="text-xs text-slate-400 mt-1 font-mono">Recruiter Self-Serve Intake Engine v1.0</p>
+        </div>
+        <div class="text-right hidden sm:block">
+            <span class="text-xs font-mono text-slate-400 bg-slate-900/90 px-3 py-1.5 rounded-full border border-slate-800">
+                Recruiter Portal v1.0
+            </span>
         </div>
     </header>
 
@@ -98,7 +100,6 @@
                 </button>
             </form>
 
-            <!-- GENERATED LINK RESULT -->
             <div id="output-container" class="hidden p-5 rounded-xl bg-slate-900 border border-slate-800 space-y-3">
                 <span class="text-xs font-semibold text-emerald-400 uppercase tracking-wider block">Generated Screening URL</span>
                 <input type="text" id="generated-url" readonly class="w-full px-3 py-2 bg-slate-950 border border-slate-800 rounded text-xs font-mono text-slate-200 select-all focus:outline-none">
